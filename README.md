@@ -37,7 +37,7 @@ $ .\myenv\Scripts\activate
 
 3. Make sure you're in inside the directory. Install the required libraries:
 ```
-$ pip3 install requirements.txt
+$ pip3 install -r requirements.txt
 ```
 4. Before running the application, we need an API key. This can be obtained from [NASA Open APIs](https://api.nasa.gov/)
 
