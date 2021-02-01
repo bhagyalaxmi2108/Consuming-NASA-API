@@ -43,19 +43,11 @@ $ pip3 install -r requirements.txt
 
 5. In the cloned repository, create an `.env` file and store API key and urls in it
 
-6. Now that our environment is ready, call the Open NASA API
-   - For APOD api call: 
-     - Type the following in the terminal.
-     ```
-     $ python3 apod.py
-     ```
-     - This will make an API call followed by storing the json returned in an excel file named `apod_data.xlsx`
-
-   - For Asteroids - NeoWs, user can search for Asteroids based on their closest approach date to Earth, lookup a specific Asteroid with its NASA JPL small body id, and browse the overall data-set. `asteroid.py` defines three fuctions for each one of these to make three different API calls. 
-     - Type the following in the terminal.
+6. Now that our environment is ready, we need to call the Open NASA API
+   - Type the following in the terminal.
      ```
      $ python asteroid.py
      ```
-     - This will similarly make API calls and store the json returned in an excel file named `asteroid_data.xlsx`
-     - This file will have three worksheet, each one storing data received from the API calls made by the three functions.
+   - The above command will run a interactive window. Depending on the choices, it'll make APOD or Asteroid NeoWs API calls. Every time on running this, `NASA_OPEN_API.xlsx` will be created which will have as many worksheets as per the no.of choices, each one storing data received from the API calls based on the choices. 
+   - In case, the input data is wrong, the worksheet will record the error that it faced
 
