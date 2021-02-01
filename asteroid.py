@@ -1,81 +1,64 @@
 import requests
 import socket
-import xlsxwriter
+from xlsxwriter import Workbook
 import ast
+from write_to_excel import write_to_excel
+from dotenv import load_dotenv
+import os
 
-file = open('api_key.txt', 'r')
-api_file = ast.literal_eval(file.read())
+load_dotenv()
 
-api_key = api_file.get("api_key")
 
-hostname = "api.nasa.gov"
-ip_address = socket.gethostbyname(hostname)
+def fetch_asteroid_neows_feed(api_key, url_neo_feed, start_date, end_date):
 
-def fetchAsteroidNeowsFeed():
-    URL_NeoFeed = "https://api.nasa.gov/neo/rest/v1/feed"
-    params = {
-        'api_key':api_key,
-        'start_date':'2021-01-30',
-        'end_date':'2021-01-30'
-    }
+    params = {"api_key": api_key, "start_date": start_date, "end_date": end_date}
+    response = requests.get(url_neo_feed, params=params).json()
+    return response
 
-    response = requests.get(URL_NeoFeed,params=params).json()
+
+def fetch_asteroid_neows_lookup(api_key, url_neo_lookup, asteroid_id):
+
+    url = url_neo_lookup + asteroid_id
+
+    params = {"api_key": api_key}
+    response = requests.get(url, params=params).json()
+    return response
+
+
+def fetch_asteroid_neows_browse(api_key, url_neo_browse):
+
+    params = {"api_key": api_key}
+    response = requests.get(url_neo_browse, params=params).json()
+    return response
+
+def main():
+
+    api_key = os.getenv('api_key')
+
+    url_neo_feed = os.getenv('url_neo_feed')
+    url_neo_lookup = os.getenv('url_neo_lookup')
+    url_neo_browse = os.getenv('url_neo_browse')
 
     hostname = "api.nasa.gov"
     ip_address = socket.gethostbyname(hostname)
-    
-    return response
 
+    start_date = "2021-01-30"
+    end_date = "2021-01-30"
 
-def fetchAsteroidNeowsLookup():
-    asteroid_id = '3542519'
-    URL_NeoLookup = "https://api.nasa.gov/neo/rest/v1/neo/"+ asteroid_id
-    params = {
-        'api_key':api_key
-    }
-    response = requests.get(URL_NeoLookup,params=params).json()
-    return response
+    asteroid_id = "3542519"
 
-def fetchAsteroidNeowsBrowse():
-    URL_NeoBrowse = "https://api.nasa.gov/neo/rest/v1/neo/browse/"
-    params = {
-        'api_key':api_key
-    }
-    response = requests.get(URL_NeoBrowse,params=params).json()
-    return response
+    response_neo_feed = fetch_asteroid_neows_feed(api_key=api_key, url_neo_feed=url_neo_feed, start_date=start_date, end_date=end_date)
+    response_neo_lookup = fetch_asteroid_neows_lookup(api_key=api_key, url_neo_lookup=url_neo_lookup, asteroid_id=asteroid_id)
+    response_neo_browse = fetch_asteroid_neows_browse(api_key=api_key, url_neo_browse=url_neo_browse)
 
-response1  = fetchAsteroidNeowsFeed()
-response2  = fetchAsteroidNeowsLookup()
-response3  = fetchAsteroidNeowsBrowse()
+    workbook = Workbook('asteroid_data.xlsx')
 
-workbook = xlsxwriter.Workbook('asteroid_data.xlsx')
-worksheet1 = workbook.add_worksheet()
-worksheet2 = workbook.add_worksheet()
-worksheet3 = workbook.add_worksheet()
+    write_to_excel(workbook=workbook, response=response_neo_feed, ip_address=ip_address)
+    write_to_excel(workbook=workbook, response=response_neo_lookup, ip_address=ip_address)
+    write_to_excel(workbook=workbook, response=response_neo_browse, ip_address=ip_address)
 
-bold = workbook.add_format({'bold': True})
+    workbook.close()
 
-def write_to_excel(worksheet, response):
+if __name__=='__main__':
 
-    col=0
-        
-    for key, values in response.items():
-
-        worksheet.set_column(0, col, 25)
-        worksheet.set_column(1, col, 25)
-        worksheet.write(0, col, key, bold)
-        worksheet.write(1, col, str(values))
-        col+=1
-
-    worksheet.set_column(0, col, 25)
-    worksheet.set_column(1, col, 25)
-    worksheet.write(0, col, "ip_address", bold)
-    worksheet.write(1, col, ip_address)
-
-
-write_to_excel(worksheet1, response1)
-write_to_excel(worksheet2, response2)
-write_to_excel(worksheet3, response3)
-
-
-workbook.close()
+    main() 

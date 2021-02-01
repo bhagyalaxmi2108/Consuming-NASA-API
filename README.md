@@ -41,7 +41,7 @@ $ pip3 install -r requirements.txt
 ```
 4. Before running the application, we need an API key. This can be obtained from [NASA Open APIs](https://api.nasa.gov/)
 
-5. In the cloned repository, replace API key in the file `api_key.txt`
+5. In the cloned repository, create an `.env` file and store API key and urls in it
 
 6. Now that our environment is ready, call the Open NASA API
    - For APOD api call: 

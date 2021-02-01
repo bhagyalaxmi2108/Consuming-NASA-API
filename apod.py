@@ -1,45 +1,41 @@
 import requests
 import socket
-import xlsxwriter
 import ast
+from xlsxwriter import Workbook
+from write_to_excel import write_to_excel
+from dotenv import load_dotenv
+import os
 
-file = open('api_key.txt', 'r')
-api_file = ast.literal_eval(file.read())
+load_dotenv()
 
-api_key = api_file.get("api_key")
+def fetch_apod(api_key: str, date: str, url_apod: str):
 
-URL_APOD = "https://api.nasa.gov/planetary/apod"
+    params = {"api_key": api_key, "date": date, "hd": "True"}
 
-date = '2021-01-30'
-params = {
-    'api_key': api_key,
-    'date': date,
-    'hd': 'True'
-}
+    response = requests.get(url_apod, params=params).json()
 
-response = requests.get(URL_APOD, params=params).json()
+    return response
 
-hostname = "apod.nasa.gov"
-ip_address = socket.gethostbyname(hostname)
 
-workbook = xlsxwriter.Workbook('apod_data.xlsx')
-worksheet = workbook.add_worksheet()
+def main():
 
-bold = workbook.add_format({'bold': True})
+    api_key = os.getenv('api_key')
 
-col = 0
+    url_apod = os.getenv('url_apod')
 
-for key, values in response.items():
+    hostname = "apod.nasa.gov"
+    ip_address = socket.gethostbyname(hostname)
 
-    worksheet.set_column(0, col, 15)
-    worksheet.set_column(1, col, 15)
-    worksheet.write(0, col, key, bold)
-    worksheet.write(1, col, values)
-    col += 1
+    date = "2021-01-30"
 
-worksheet.set_column(0, col, 25)
-worksheet.set_column(1, col, 25)
-worksheet.write(0, col, "ip_address", bold)
-worksheet.write(1, col, ip_address)
+    response= fetch_apod(api_key=api_key, date=date, url_apod=url_apod)
 
-workbook.close()
+    workbook = Workbook('apod_data.xlsx')
+
+    write_to_excel(workbook=workbook, response=response, ip_address=ip_address)
+
+    workbook.close()
+
+if __name__ == "__main__":
+
+    main()
