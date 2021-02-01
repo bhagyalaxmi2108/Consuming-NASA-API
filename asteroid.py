@@ -28,7 +28,7 @@ def fetch_asteroid_neows_feed(api_key, url_neo_feed):
 
 def fetch_asteroid_neows_lookup(api_key, url_neo_lookup):
 
-    asteroid_id = input("Input valid asteriod id: ")
+    asteroid_id = input("Input valid asteriod id(e.g. 3542519): ")
 
     url = url_neo_lookup + asteroid_id
 
