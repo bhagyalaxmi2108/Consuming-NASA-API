@@ -1,6 +1,6 @@
-import xlsxwriter
+from xlsxwriter import Workbook
 
-def write_to_excel(workbook, response, ip_address):
+def write_to_excel(workbook: Workbook, response: dict, ip_address: str) -> None:
 
     worksheet = workbook.add_worksheet()
 

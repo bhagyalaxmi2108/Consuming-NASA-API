@@ -9,11 +9,11 @@ from write_to_excel import write_to_excel
 load_dotenv()
 
 
-def fetch_apod(api_key, url_apod):
+def fetch_apod(api_key: str, url_apod: str) -> dict:
     """
     Consumes the Astronomy Picture Of the Day (APOD) API response
     Args:
-        api_key (int)
+        api_key (str)
         url_apod (str)
         date (str)
     Returns:
@@ -31,11 +31,11 @@ def fetch_apod(api_key, url_apod):
     return response
 
 
-def fetch_asteroid_neows_feed(api_key, url_neo_feed):
+def fetch_asteroid_neows_feed(api_key: str, url_neo_feed: str) -> dict:
     """
     Consumes the list of Asteroids based on their closest approach date to Earth
     Args:
-        api_key (int)
+        api_key (str)
         url_neo_feed (str)
         start_date (str)
         end_date (str)
@@ -55,13 +55,13 @@ def fetch_asteroid_neows_feed(api_key, url_neo_feed):
     return response
 
 
-def fetch_asteroid_neows_lookup(api_key, url_neo_lookup):
+def fetch_asteroid_neows_lookup(api_key: str, url_neo_lookup: str) -> dict:
     """
     Consumes details of a Asteroids based on their unique NASA-JPL small body id
     Args:
-        api_key (int)
+        api_key (str)
         url_neo_lookup (str) 
-        asteroid_id (int)
+        asteroid_id (str)
     Returns:
         response (json)
     """
@@ -76,11 +76,11 @@ def fetch_asteroid_neows_lookup(api_key, url_neo_lookup):
     return response
 
 
-def fetch_asteroid_neows_browse(api_key, url_neo_browse):
+def fetch_asteroid_neows_browse(api_key: str, url_neo_browse: str) -> dict:
     """
     Consumes overall Asteroid data-set
     Args:
-        api_key (int)
+        api_key (str)
         url_neo_browse (str)
     Returns:
         response (json)
